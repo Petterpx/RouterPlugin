@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+    id 'kotlin-kapt'
+}
+apply from:'../maven-publish.gradle'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
+    implementation project(path: ':router-annotations')
+    implementation "com.google.auto.service:auto-service:1.0.1"
+    kapt "com.google.auto.service:auto-service:1.0.1"
+//    compileOnly "com.squareup:kotlinpoet:1.10.2"
+}

@@ -1,0 +1,73 @@
+apply plugin: 'kotlin'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'maven-publish'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // 因为使用的 Kotlin 需要需要添加 Kotlin 插件
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+    }
+}
+
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+//本地依赖插件时使用
+gradlePlugin {
+    plugins {
+        //插件名,每一个插件都可以有
+        routerPlugin {
+            //插件id
+            id = 'com.petterp.router'
+            implementationClass = 'com.petterp.gradle.RouterPlugin'
+        }
+        //第二个插件
+//        test2Plugin {
+//            id = xxx
+//            implementationClass = xxx
+//        }
+    }
+}
+
+// com/petterp/gradle/plugins/xxx
+//通常为包名
+group = 'com.petterp'
+//描述信息
+description = '这是一个独立的插件id'
+//插件版本号
+version = '1.0'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            //当前插件的名称
+            artifactId = 'router-plugin'
+            from components.java
+        }
+    }
+    //插件存储库
+    repositories {
+        maven {
+            // 生成的插件位置
+            url = uri('../repo')
+        }
+    }
+}
+
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
+}
+
