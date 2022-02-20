@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.petterp.router'
     id 'kotlin-kapt'
+    id 'com.petterp.router'
 }
 
 router {
@@ -35,6 +35,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+//    //向kapt传递参数
+//    kapt {
+//        arguments {
+//            arg("root_project_dir", rootProject.projectDir.absolutePath)
+//        }
+//    }
 }
 
 dependencies {
@@ -45,6 +52,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation project(path: ':router-annotations')
     kapt project(path: ':router-processor')
+//    implementation 'com.github.Petterpx.R，outerPlugin:router_annotations:1.0'
+//    kapt 'com.github.Petterpx.RouterPlugin:router_processor:1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

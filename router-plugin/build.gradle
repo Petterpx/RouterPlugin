@@ -43,7 +43,7 @@ gradlePlugin {
 
 // com/petterp/gradle/plugins/xxx
 //通常为包名
-group = 'com.petterp'
+group = 'com.petterp.router'
 //描述信息
 description = '这是一个独立的插件id'
 //插件版本号
@@ -69,5 +69,6 @@ publishing {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
+    implementation  "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
 }
 

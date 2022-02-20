@@ -3,7 +3,7 @@ plugins {
     id 'kotlin'
     id 'kotlin-kapt'
 }
-apply from:'../maven-publish.gradle'
+apply from: '../maven-publish.gradle'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -15,5 +15,7 @@ dependencies {
     implementation project(path: ':router-annotations')
     implementation "com.google.auto.service:auto-service:1.0.1"
     kapt "com.google.auto.service:auto-service:1.0.1"
+    implementation 'com.google.code.gson:gson:2.9.0'
+    //kotlin代码生成器,暂时不需要,后期学习,现阶段非必需
 //    compileOnly "com.squareup:kotlinpoet:1.10.2"
 }
