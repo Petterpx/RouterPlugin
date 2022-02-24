@@ -1,5 +1,7 @@
 package com.petterp.gradle
 
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.internal.plugins.AppPlugin
 import groovy.json.JsonSlurper
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -17,6 +19,13 @@ import java.io.File
 class RouterPlugin : Plugin<Project> {
     override fun apply(project: Project) {
 
+        // 注册自定义的Transform
+        if (project.plugins.hasPlugin(AppPlugin::class.java)) {
+            val appExtension = project.extensions.getByType(AppExtension::class.java)
+            val transForm = RouterMappingTransForm()
+            appExtension.registerTransform(transForm)
+        }
+
         // 1.
         (project.extensions.findByName("kapt") as KaptExtension).apply {
             arguments {
@@ -28,16 +37,19 @@ class RouterPlugin : Plugin<Project> {
         project.extensions.create(ROUTER_EXTENSION, RouterExtension::class.java)
         project.task(testTaskName)
 
+        if (!project.plugins.hasPlugin(AppPlugin::class.java)) return
         // 开始生成文档,在项目配置结束后
         project.afterEvaluate {
             val routerExtension = project.properties[ROUTER_EXTENSION] as RouterExtension
+            if (routerExtension.wikiDir.isEmpty()) throw RuntimeException("尚未设置文档路径")
             println("-用户设置的wiki路径------${routerExtension.wikiDir}")
             // 在javac任务(compileDebugJavaWithJavac)后，汇总生成的文档
             project.tasks.asSequence().filter { task ->
                 task.name.startsWith("compile") && task.name.endsWith("JavaWithJavac") && task != null
             }.forEach {
                 it.doLast {
-                    val routerMappingDir = File(project.rootProject.projectDir, "router_mapping")
+                    val routerMappingDir =
+                        File(project.rootProject.projectDir, "router_mapping")
                     if (!routerMappingDir.exists()) return@doLast
                     val allChildFiles = routerMappingDir.listFiles()
                     if (allChildFiles.isNullOrEmpty()) return@doLast

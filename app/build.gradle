@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation project(path: ':router-annotations')
+    implementation project(path: ':biz_reading')
     kapt project(path: ':router-processor')
 //    implementation 'com.github.Petterpx.R，outerPlugin:router_annotations:1.0'
 //    kapt 'com.github.Petterpx.RouterPlugin:router_processor:1.0'
