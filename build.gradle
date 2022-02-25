@@ -8,6 +8,5 @@ plugins {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-    delete rootProject.file("router_mapping")
-    delete rootProject.file("页面文档.md")
+    delete rootProject.file("router_doc")
 }

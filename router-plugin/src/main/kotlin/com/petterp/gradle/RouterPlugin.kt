@@ -19,23 +19,30 @@ import java.io.File
 class RouterPlugin : Plugin<Project> {
     override fun apply(project: Project) {
 
-        // 注册自定义的Transform
+        // 1. 添加自定义的键值对
+        project.extensions.create(ROUTER_EXTENSION, RouterExtension::class.java)
+        project.task(testTaskName)
+
+        // 2. 注册自定义的Transform
         if (project.plugins.hasPlugin(AppPlugin::class.java)) {
             val appExtension = project.extensions.getByType(AppExtension::class.java)
             val transForm = RouterMappingTransForm()
             appExtension.registerTransform(transForm)
         }
 
-        // 1.
+        // 2. 为注解处理器添加参数,避免手动去build中kapt传递
+        // 这里本来想让用户自己传递路径,但不同model都能配置键值对
+        // 虽然可以根据app-model优先被调用这一特点，优先获取传递的参数，进行保留，后续model复用
+        // 但是这个做法不够优雅，所以暂时就放弃,改用写死,后续再看看有没有别的方式
+        val docPath = "${project.rootProject.projectDir.absolutePath}/router_doc"
+        val file = File(docPath)
+        if (!file.exists()) file.mkdirs()
         (project.extensions.findByName("kapt") as KaptExtension).apply {
             arguments {
-                arg("root_project_dir", project.rootProject.projectDir.absolutePath)
+                // 这里我们选择硬编码为项目目录
+                arg("root_project_dir", docPath)
             }
         }
-
-        // 添加自定义的键值对
-        project.extensions.create(ROUTER_EXTENSION, RouterExtension::class.java)
-        project.task(testTaskName)
 
         if (!project.plugins.hasPlugin(AppPlugin::class.java)) return
         // 开始生成文档,在项目配置结束后
@@ -48,16 +55,17 @@ class RouterPlugin : Plugin<Project> {
                 task.name.startsWith("compile") && task.name.endsWith("JavaWithJavac") && task != null
             }.forEach {
                 it.doLast {
+                    // 读一下我们生成的json,开始进行汇总
                     val routerMappingDir =
-                        File(project.rootProject.projectDir, "router_mapping")
+                        File(docPath, "router_mapping")
                     if (!routerMappingDir.exists()) return@doLast
                     val allChildFiles = routerMappingDir.listFiles()
                     if (allChildFiles.isNullOrEmpty()) return@doLast
 
                     val mdBuilder = StringBuilder("# 页面文档\n\n")
-                    allChildFiles.last { childFile ->
+                    allChildFiles.filter { childFile ->
                         childFile.name.endsWith(".json")
-                    }?.let { file ->
+                    }.forEach { file ->
                         val jsonSlurper = JsonSlurper()
                         (jsonSlurper.parse(file) as? ArrayList<Map<String, String>>)?.forEach { map ->
                             val url = map["url"]

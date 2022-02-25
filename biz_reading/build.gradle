@@ -1,25 +1,19 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.petterp.router'
-}
-
-router {
-    wikiDir "${getRootDir().absolutePath}/router_doc"
 }
 
 android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.petterp.router"
         minSdk 21
         targetSdk 32
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -35,13 +29,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
-//    //向kapt传递参数,改为了在插件中定义,具体见RouterPlugin
-//    kapt {
-//        arguments {
-//            arg("root_project_dir", rootProject.projectDir.absolutePath)
-//        }
-//    }
 }
 
 dependencies {
@@ -49,13 +36,9 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation project(path: ':router-annotations')
-    implementation project(path: ':biz_reading')
-    kapt project(path: ':router-processor')
-//    implementation 'com.github.Petterpx.R，outerPlugin:router_annotations:1.0'
-//    kapt 'com.github.Petterpx.RouterPlugin:router_processor:1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation project(path: ':router-annotations')
+    kapt project(path: ':router-processor')
 }

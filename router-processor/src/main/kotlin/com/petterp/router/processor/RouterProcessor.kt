@@ -35,6 +35,7 @@ class RouterProcessor : AbstractProcessor() {
         // 1. 生成相应的mapping类
         writeMappingClassManager(mapping)
         // 2. 生成路由json
+        // ps: root_project_dir是我们给注解处理器传递的参数,具体见 [RouterPlugin]
         val rootDir = processingEnv.options["root_project_dir"]
         writeMapping(rootDir, jsonArray)
 
@@ -92,9 +93,9 @@ class RouterProcessor : AbstractProcessor() {
         val routerFile = File(rootFile, "router_mapping")
         if (!routerFile.exists()) routerFile.mkdir()
         // 这里选择移除router_mapping下的的json,我们希望它只保留最新的一份
-        else routerFile.listFiles()?.forEach {
-            it.delete()
-        }
+//        else routerFile.listFiles()?.forEach {
+//            it.delete()
+//        }
         val mappingFile = File(routerFile, "mapping_${System.currentTimeMillis()}.json")
         mappingFile.bufferedWriter().use {
             it.write(jsonArray.toString())

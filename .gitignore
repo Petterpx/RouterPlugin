@@ -9,10 +9,14 @@
 /.idea
 /router-annotations/build
 /router-plugin/build
+/router_doc
 /repo
 /app/src/androidTest
 /app/src/test
 /router-processor/build
+/biz_reading/build
+/biz_reading/src/androidTest
+/biz_reading/src/test
 /.idea/assetWizardSettings.xml
 .DS_Store
 /build
