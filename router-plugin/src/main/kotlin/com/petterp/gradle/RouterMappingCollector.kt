@@ -4,7 +4,7 @@ import java.io.File
 import java.util.jar.JarFile
 
 /**
- * 路由映射信息收集者
+ * 路由映射信息收集者,主要收集生成的相应的Mapping类
  * @author petterp
  */
 class RouterMappingCollector {
